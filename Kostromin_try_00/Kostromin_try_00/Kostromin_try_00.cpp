@@ -1,21 +1,78 @@
 ﻿// Kostromin_try_00.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
-#include <string.h>
-#include <iostream>
+#include "Header.h"
 #include "Kostromin_student.h"
+#include "Kostromin_group.h"
 using namespace std;
+
+short int prov_int(short int min = -32767, short int max = 32767)
+{
+    short int out;
+    while (!(cin >> out) || (out > max) || (out < min))
+    {
+        cout << "ERROR RETRY: ";
+        cin.clear();
+        cin.ignore(32767, '\n');
+    }
+    return out;
+}
+
+void menu(Kostromin_group& group)
+{
+    string tmp;
+    ifstream is;
+    ofstream os;
+    enum states { add = 1, consol_out, read_fd, resave, clear };
+    list<string> commands =
+    {
+        "1)ADD STUDENT TO GROUP",
+        "2)COUT GROUP",
+        "3)READ_FD",
+        "4)OUT GROUP TO FILE",
+        "5)CLEAR LIST"
+    };
+
+    for (;;)
+    {
+        for (auto i : commands) cout << i << endl;
+        switch (prov_int(1, 5))
+        {
+        case add:
+            system("cls");
+            group.add();
+            break;
+        case consol_out:
+            system("cls");
+            cout << group;
+            break;
+        case read_fd:
+            system("cls");
+            cout << "FILE TO READ\n";
+            cin >> tmp;
+            is.open(tmp);
+            is >> group;
+            is.close();
+            break;
+        case resave:
+            system("cls");
+            cout << "FILE TO WRITE\n";
+            cin >> tmp;
+            os.open(tmp);
+            os << group;
+            os.close();
+            break;
+        case clear:
+            system("cls");
+            group.clear();
+        }
+    }
+}
 
 int main()
 {
-    Kostromin_student person;
-    ifstream input_file;
-    ofstream output_file;
-
-    output_file.open("2.txt");
-    input_file.open("1.txt");
-    input_file >> person;
-    output_file << person;
-    cout << person;
+    Kostromin_student stud;
+    Kostromin_group     group;
+    menu(group);
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"

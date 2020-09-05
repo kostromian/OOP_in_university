@@ -1,3 +1,9 @@
-Name of student: aleksasha
-Surname of student: KOss_tomin
-Age of student: 65535
+Alex
+fdfd
+12
+Alexand
+Kostromin
+13
+Max
+fdfd
+14
