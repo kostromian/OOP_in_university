@@ -20,58 +20,75 @@ short int prov_int(short int min = -32767, short int max = 32767)
 void menu(Kostromin_group& group)
 {
     string tmp;
-    ifstream is;
-    ofstream os;
-    enum states { add = 1, consol_out, read_fd, resave, clear };
+    enum states { add = 1, consol_out, read_fd, resave, clear, end };
     list<string> commands =
     {
         "1)ADD STUDENT TO GROUP",
         "2)COUT GROUP",
         "3)READ_FD",
         "4)OUT GROUP TO FILE",
-        "5)CLEAR LIST"
+        "5)CLEAR LIST",
+        "6)EXIT"
     };
 
     for (;;)
     {
         for (auto i : commands) cout << i << endl;
-        switch (prov_int(1, 5))
+        switch (prov_int(1, 6))
         {
         case add:
             system("cls");
+            cin.ignore();
             group.add();
             break;
         case consol_out:
             system("cls");
-            cout << group;
+            group.cons_os();
             break;
         case read_fd:
+        {
             system("cls");
             cout << "FILE TO READ\n";
             cin >> tmp;
-            is.open(tmp);
-            is >> group;
-            is.close();
+            ifstream is(tmp);
+            group.file_is(is);
             break;
+        }
         case resave:
+        {
             system("cls");
             cout << "FILE TO WRITE\n";
             cin >> tmp;
-            os.open(tmp);
-            os << group;
-            os.close();
+            ofstream os(tmp);
+            group.file_os(os);
             break;
+        }
         case clear:
             system("cls");
             group.clear();
+        case end:
+            exit(0);
         }
     }
 }
 
 int main()
 {
-    Kostromin_student stud;
+    Kostromin_starosta  star;
     Kostromin_group     group;
+    
+
+    CFile f;
+    CFileException e;
+    CString str = "Open_File.dat";
+    f.Open(str, CFile::modeCreate | CFile::modeWrite, &e);
+    CArchive arStore(&f, CArchive::store);
+    group.Serialize(arStore);
+    arStore.WriteString(str);
+    arStore.Close();
+    
+
+    
     menu(group);
 }
 

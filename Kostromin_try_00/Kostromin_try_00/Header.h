@@ -5,6 +5,11 @@
 #include <list>
 #include <vector>
 #include <functional>
+#include <memory>
+#include <afxwin.h>
+#include "Kostromin_student.h"
+#include "Kostromin_group.h"
+#include "Kostromin_starosta.h"
 
 void menu(Kostromin_group& group);
 short int prov_int(short int min, short int max);
