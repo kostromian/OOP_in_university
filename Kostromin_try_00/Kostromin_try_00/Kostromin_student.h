@@ -1,19 +1,18 @@
 #pragma once
-#include "Header.h"
-using namespace std;
+#include "Helper.h"
 
-class	Kostromin_student
+class	Kostromin_student : public CObject
 {
 public:
-	string name;
-	string surname;
+	CString name;
+	CString surname;
 	unsigned short int age;
 
-	void	cons_os();
-	void	file_os(ofstream& out);
-	void	cons_is();
-	void	file_is(istream& is);
-	friend istream& operator >> (istream& in, Kostromin_student& self);
-	friend ostream& operator << (ostream& out, Kostromin_student& self);
+	Kostromin_student();
+	virtual void	Serialize(CArchive& ar);
+	virtual void	cons_os();
+	virtual void	cons_is();
+protected:
+	DECLARE_SERIAL(Kostromin_student)
 };
 

@@ -1,5 +1,22 @@
 #include "Kostromin_starosta.h"
 
+IMPLEMENT_SERIAL(Kostromin_starosta, Kostromin_student, 1)
+
+Kostromin_starosta::Kostromin_starosta()
+{
+	part_time = 0;
+}
+
+//сериализация через mfc(необходимо подключить mfc к проекту)
+void    Kostromin_starosta::Serialize(CArchive& ar)
+{
+	CObject::Serialize(ar);
+	if (ar.IsStoring())
+		ar << mid_name << part_time << name << surname << age;
+	else
+		ar >> mid_name >> part_time >> name >> surname >> age;
+}
+
 void Kostromin_starosta :: cons_os()
 {
 	Kostromin_student::cons_os();
@@ -15,21 +32,5 @@ void Kostromin_starosta::cons_is()
 	getline(cin, mid_name);
 	cout << "Input participation time in pairs: ";
 	getline(cin, tmp);
-	part_time = atoi(tmp.c_str());
-}
-
-void Kostromin_starosta::file_os(ofstream& os)
-{
-	Kostromin_student::file_os(os);
-	os	<< mid_name << '\n'
-		<< part_time << '\n';
-}
-
-void Kostromin_starosta::file_is(istream& is)
-{
-	string tmp;
-	Kostromin_student::file_is(is);
-	getline(is, mid_name);
-	getline(is, tmp);
 	part_time = atoi(tmp.c_str());
 }

@@ -1,21 +1,20 @@
 #pragma once
-#include "Header.h"
+#include "Helper.h"
+#include "Kostromin_starosta.h"
 #include "Kostromin_student.h"
-using namespace std;
 
 class Kostromin_group : public CObject
 {
 public:
-	list<Kostromin_student *>	students;
-	CString					name;
-	DECLARE_SERIAL(Kostromin_group);
-	void	cons_os();
-	void	file_os(ofstream& out);
-	void	file_is(ifstream& is);
-	friend ifstream& operator >> (ifstream& in, Kostromin_group& self);
-	friend ostream& operator << (ostream& out, Kostromin_group& self);
-	void clear();
-	void add();
-	virtual void Serialize(CArchive& archive);
-	~Kostromin_group();
+	list<shared_ptr<Kostromin_student>> students;
+	int									num_students;
+	void								Cons_os();
+	void								Add();
+	void								Add_starosta();
+	virtual void						Serialize(CArchive& archive);
+	void								Ser_from_file();
+	void								Deser_from_file();
+	Kostromin_group();
+protected:
+	DECLARE_SERIAL(Kostromin_group)
 };

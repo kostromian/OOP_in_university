@@ -30,7 +30,6 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -141,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Kostromin_group.cpp" />
     <ClCompile Include="Kostromin_starosta.cpp" />
     <ClCompile Include="Kostromin_student.cpp" />
@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="Kostromin_group.h" />
     <ClInclude Include="Kostromin_starosta.h" />
     <ClInclude Include="Kostromin_student.h" />

@@ -1,71 +1,56 @@
 ﻿// Kostromin_try_00.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
-#include "Header.h"
+#include "Helper.h"
 #include "Kostromin_student.h"
+#include "Kostromin_starosta.h"
 #include "Kostromin_group.h"
-using namespace std;
-
-short int prov_int(short int min = -32767, short int max = 32767)
-{
-    short int out;
-    while (!(cin >> out) || (out > max) || (out < min))
-    {
-        cout << "ERROR RETRY: ";
-        cin.clear();
-        cin.ignore(32767, '\n');
-    }
-    return out;
-}
 
 void menu(Kostromin_group& group)
 {
     string tmp;
-    enum states { add = 1, consol_out, read_fd, resave, clear, end };
+    enum states { add = 1, consol_out, ser, deser, clear, add_starosta, end};
     list<string> commands =
     {
         "1)ADD STUDENT TO GROUP",
         "2)COUT GROUP",
-        "3)READ_FD",
-        "4)OUT GROUP TO FILE",
+        "3)SERIALIZE",
+        "4)DESERIALIZE",
         "5)CLEAR LIST",
-        "6)EXIT"
+        "6)ADD STAROSTA TO GROUP",
+        "7)EXIT",
     };
 
     for (;;)
     {
-        for (auto i : commands) cout << i << endl;
-        switch (prov_int(1, 6))
+        system("cls");
+        for (auto& i : commands) cout << i << endl;
+        switch (prov_int(1, 7))
         {
         case add:
-            system("cls");
             cin.ignore();
-            group.add();
+            group.Add();
             break;
         case consol_out:
-            system("cls");
-            group.cons_os();
+            group.Cons_os();
+            system("pause");
             break;
-        case read_fd:
-        {
-            system("cls");
-            cout << "FILE TO READ\n";
-            cin >> tmp;
-            ifstream is(tmp);
-            group.file_is(is);
-            break;
-        }
-        case resave:
-        {
-            system("cls");
-            cout << "FILE TO WRITE\n";
-            cin >> tmp;
-            ofstream os(tmp);
-            group.file_os(os);
-            break;
-        }
         case clear:
-            system("cls");
-            group.clear();
+            group.students.clear();
+            break;
+        case add_starosta:
+            cin.ignore();
+            group.Add_starosta();
+            break;
+        case ser:
+        {
+            group.Ser_from_file();
+            break;
+        }
+        case deser:
+        {
+            group.Deser_from_file();
+            break;
+        }
         case end:
             exit(0);
         }
@@ -74,21 +59,7 @@ void menu(Kostromin_group& group)
 
 int main()
 {
-    Kostromin_starosta  star;
     Kostromin_group     group;
-    
-
-    CFile f;
-    CFileException e;
-    CString str = "Open_File.dat";
-    f.Open(str, CFile::modeCreate | CFile::modeWrite, &e);
-    CArchive arStore(&f, CArchive::store);
-    group.Serialize(arStore);
-    arStore.WriteString(str);
-    arStore.Close();
-    
-
-    
     menu(group);
 }
 

@@ -1,29 +1,64 @@
-#include "Header.h"
 #include "Kostromin_group.h"
 
+IMPLEMENT_SERIAL(Kostromin_group, CObject, 1)
+
+//сериализация через mfc(необходимо подключить mfc к проекту)
 void Kostromin_group::Serialize(CArchive& archive)
 {
-	// call base class function first
-	// base class is CObject in this case
 	CObject::Serialize(archive);
-
-	// now do the stuff for our specific class
 	if (archive.IsStoring())
-		archive << name;
+	{
+		num_students = students.size();
+		archive << num_students;
+		for (auto it : students)
+		{
+			archive << it.get();
+		}
+	}
 	else
-		archive >> name;
+	{
+		students.clear();
+		archive >> num_students;
+		Kostromin_student *tmp;
+		for (int i = 0; i != num_students; i++)
+		{
+			archive >> tmp;
+			shared_ptr<Kostromin_student> tmp_shared(tmp);
+			students.push_back(tmp_shared);
+		}
+	}
 }
 
-void Kostromin_group::clear() 
+void Kostromin_group::Ser_from_file()
 {
-	for (auto it : students)
-		delete it;
-	this->students.clear(); 
+	string name_file;
+	cout << "FILE TO WRITE\n";
+	cin >> name_file;
+	CFile f(name_file.c_str(), CFile::modeCreate | CFile::modeWrite);
+	CArchive arStore(&f, CArchive::store);
+	Serialize(arStore);
+	arStore.Close();
+	f.Close();
 }
 
-Kostromin_group::~Kostromin_group() { clear(); }
+void Kostromin_group::Deser_from_file()
+{
+	string name_file;
+	cout << "FILE TO READ\n";
+	cin >> name_file;
+	CFile f(name_file.c_str(), CFile::modeRead);
+	CArchive  arLoad(&f, CArchive::load);
+	Serialize(arLoad);
+	arLoad.Close();
+	f.Close();
+}
 
-void    Kostromin_group::cons_os()
+Kostromin_group::Kostromin_group() 
+{
+	num_students = 0; 
+}
+
+void    Kostromin_group::Cons_os()
 {
 	for(auto it : students)	
 	{
@@ -32,42 +67,16 @@ void    Kostromin_group::cons_os()
 	}
 }
 
-void    Kostromin_group::file_os(ofstream &os)
+void Kostromin_group::Add() 
 {
-	for (auto it : students)
-		it->file_os(os);
-}
-
-void	Kostromin_group::file_is(ifstream& is)
-{
-	clear();
-	while (is)
-	{
-		Kostromin_student* tmp = new Kostromin_student;
-		tmp->file_is(is);
-		students.push_back(tmp);
-	}
-	delete students.back();
-	students.pop_back();
-}
-
-ifstream& operator >> (ifstream& in, Kostromin_group& self)
-{
-	self.file_is(in);
-
-	return in;
-}
-
-ostream& operator << (ostream& out, Kostromin_group& self)
-{
-	for (auto it : self.students)
-		(&out == &cout) ? out << it << '\n' : out << it;
-	return out;
-}
-
-void Kostromin_group::add() 
-{
-	Kostromin_student* tmp = new Kostromin_student;
+	shared_ptr<Kostromin_student>	tmp(new Kostromin_student);
 	tmp->cons_is();
-	this->students.push_back(tmp);
+	students.push_back(tmp);
+}
+
+void Kostromin_group::Add_starosta()
+{
+	shared_ptr<Kostromin_starosta>	tmp(new Kostromin_starosta);
+	tmp->cons_is();
+	students.push_back(tmp);
 }
